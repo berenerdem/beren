@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💖 Tatlı Su Takipçisi 💖</title>
+<style>
+  body {
+    background-color: #FFF0F5;
+    font-family: 'Comic Sans MS', cursive;
+    text-align: center;
+    padding: 20px;
+  }
+  h1 {
+    color: #AD1457;
+  }
+  .cups {
+    margin: 20px 0;
+  }
+  .cup {
+    font-size: 50px;
+    margin: 0 5px;
+    display: inline-block;
+  }
+  button {
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+  }
+  .btn1 { background-color: #F8BBD0; color: black; }
+  .btn2 { background-color: #F06292; }
+  .btnReset { background-color: #D81B60; }
+  .heart {
+    position: absolute;
+    animation: floatUp 1s linear forwards;
+    font-size: 20px;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-100px); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+<h1>🥛💖 Günlük Su Takipçisi 💖🥛</h1>
+<div class="cups" id="cups"></div>
+<p id="progress"></p>
+<p id="remaining"></p>
+<button class="btn1" onclick="addCups(1)">+1 Bardak</button>
+<button class="btn2" onclick="addCups(2)">+2 Bardak</button>
+<button class="btnReset" onclick="resetCups()">Sıfırla</button>
+
+<script>
+let dailyGoal = localStorage.getItem('dailyGoal') ? parseInt(localStorage.getItem('dailyGoal')) : 8;
+let waterCups = localStorage.getItem('waterCups') ? parseInt(localStorage.getItem('waterCups')) : 0;
+
+function updateDisplay() {
+  const cupsDiv = document.getElementById('cups');
+  cupsDiv.innerHTML = '';
+  for (let i = 0; i < dailyGoal; i++) {
+    const cup = document.createElement('span');
+    cup.className = 'cup';
+    cup.textContent = '🍼';
+    cup.style.color = i < waterCups ? '#FFD1DC' : '#FFF0F5';
+    cupsDiv.appendChild(cup);
+  }
+  document.getElementById('progress').textContent = `${waterCups}/${dailyGoal} bardak içildi`;
+  document.getElementById('remaining').textContent = `Kalan: ${Math.max(dailyGoal - waterCups,0)} bardak`;
+}
+
+function createHeart() {
+  const heart = document.createElement('span');
+  heart.textContent = '💖';
+  heart.className = 'heart';
+  heart.style.left = Math.random() * window.innerWidth + 'px';
+  heart.style.top = (window.innerHeight - 150) + 'px';
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),1000);
+}
+
+function addCups(amount) {
+  waterCups = Math.min(waterCups + amount, dailyGoal);
+  localStorage.setItem('waterCups', waterCups);
+  updateDisplay();
+  for (let i = 0; i < 6; i++) createHeart();
+  if (waterCups >= dailyGoal) alert("Tebrikler! Günlük hedef tamamlandı 🎉");
+}
+
+function resetCups() {
+  waterCups = 0;
+  localStorage.setItem('waterCups', waterCups);
+  updateDisplay();
+}
+
+updateDisplay();
+</script>
+</body>
+</html>
